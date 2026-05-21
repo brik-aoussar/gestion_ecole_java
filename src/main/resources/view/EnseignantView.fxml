@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.EnseignantCtrl">
+    <top>
+        <HBox style="-fx-background-color:#1A5276; -fx-padding:10 16;"
+              spacing="12" alignment="CENTER_LEFT">
+            <Label text="👨‍🏫 Espace Enseignant"
+                   style="-fx-text-fill:white; -fx-font-size:15; -fx-font-weight:bold;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblMoyenne" style="-fx-text-fill:#AED6F1; -fx-font-size:12;"/>
+            <Label fx:id="lblStatut" style="-fx-text-fill:#BDC3C7; -fx-font-size:11;"/>
+        </HBox>
+    </top>
+    <center>
+        <VBox spacing="10" style="-fx-padding:12;">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Sous-module :"/>
+                <ComboBox fx:id="cbSousModules" prefWidth="300"
+                          onAction="#handleSelectionSousModule"/>
+                <Label text="Type de note :"/>
+                <ComboBox fx:id="cbTypeNote" prefWidth="160"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="btnImporter" text="📥 Import Excel"
+                        onAction="#handleImporterNotes"/>
+                <Button fx:id="btnEnregistrer" text="💾 Enregistrer"
+                        onAction="#handleSaisirNotes"
+                        style="-fx-background-color:#1A5276; -fx-text-fill:white; -fx-font-weight:bold;"/>
+                <Button text="📈 Moyennes" onAction="#handleConsulterMoyennes"/>
+            </HBox>
+            <TableView fx:id="tableNotes" VBox.vgrow="ALWAYS" editable="true">
+                <columns>
+                    <TableColumn fx:id="colEtudiant" text="Étudiant" prefWidth="200"/>
+                    <TableColumn fx:id="colCne"      text="CNE"      prefWidth="120"/>
+                    <TableColumn fx:id="colNote"     text="Note /20" prefWidth="100"/>
+                    <TableColumn fx:id="colType"     text="Type"     prefWidth="140"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+</BorderPane>

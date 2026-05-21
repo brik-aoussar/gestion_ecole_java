@@ -1,6 +1,9 @@
 package exception;
 
-/** Erreur de saisie utilisateur — champ invalide ou manquant. */
+/**
+ * Exception levée pour les erreurs de saisie utilisateur.
+ * Unchecked — propagée jusqu'au Controller qui l'affiche.
+ */
 public class ValidationException extends RuntimeException {
     private final String champ;
 

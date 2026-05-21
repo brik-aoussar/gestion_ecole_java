@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.ResponsableCtrl">
+
+    <!-- Barre haute -->
+    <top>
+        <HBox style="-fx-background-color:#2C3E50; -fx-padding:10 16;"
+              spacing="12" alignment="CENTER_LEFT">
+            <Label text="🎓 Responsable Planning &amp; Évaluation"
+                   style="-fx-text-fill:white; -fx-font-size:15; -fx-font-weight:bold;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblStatut" style="-fx-text-fill:#BDC3C7; -fx-font-size:11;"/>
+        </HBox>
+    </top>
+
+    <!-- Contenu principal — onglets -->
+    <center>
+        <TabPane tabClosingPolicy="UNAVAILABLE">
+
+            <!-- Onglet Étudiants -->
+            <Tab text="👤 Étudiants">
+                <VBox spacing="10" style="-fx-padding:12;">
+                    <HBox spacing="8" alignment="CENTER_LEFT">
+                        <ComboBox fx:id="cbPromotion" promptText="Promotion"
+                                  onAction="#chargerEtudiants" prefWidth="220"/>
+                        <TextField fx:id="txtRecherche" promptText="Rechercher..."
+                                   prefWidth="200" onAction="#handleRechercherEtudiant"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="btnAjouter" text="+ Ajouter"
+                                onAction="#handleAjouterEtudiant"
+                                style="-fx-background-color:#27AE60; -fx-text-fill:white;"/>
+                        <Button fx:id="btnModifier" text="✏ Modifier"
+                                onAction="#handleModifierEtudiant"/>
+                        <Button fx:id="btnArchiver" text="📦 Archiver"
+                                onAction="#handleArchiverEtudiant"
+                                style="-fx-background-color:#E67E22; -fx-text-fill:white;"/>
+                        <Button text="📥 Import Excel" onAction="#handleImporterExcel"/>
+                    </HBox>
+                    <TableView fx:id="tableEtudiants" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colCne"    text="CNE"     prefWidth="120"/>
+                            <TableColumn fx:id="colNom"    text="Nom"     prefWidth="150"/>
+                            <TableColumn fx:id="colPrenom" text="Prénom"  prefWidth="150"/>
+                            <TableColumn fx:id="colStatut" text="Statut"  prefWidth="100"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+
+            <!-- Onglet Modules -->
+            <Tab text="📚 Modules">
+                <VBox spacing="10" style="-fx-padding:12;">
+                    <HBox spacing="8">
+                        <Button fx:id="btnAjouterModule" text="+ Module"
+                                onAction="#handleAjouterModule"
+                                style="-fx-background-color:#27AE60; -fx-text-fill:white;"/>
+                        <Button fx:id="btnSupprimerModule" text="🗑 Supprimer"
+                                onAction="#handleSupprimerModule"
+                                style="-fx-background-color:#E74C3C; -fx-text-fill:white;"/>
+                    </HBox>
+                    <TableView fx:id="tableModules" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colCodeModule"    text="Code"       prefWidth="100"/>
+                            <TableColumn fx:id="colIntituleModule" text="Intitulé"  prefWidth="250"/>
+                            <TableColumn fx:id="colCoeffModule"   text="Coeff."    prefWidth="80"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+
+            <!-- Onglet Rapports -->
+            <Tab text="📊 Rapports">
+                <VBox spacing="14" alignment="CENTER" style="-fx-padding:30;">
+                    <Label text="Générer un rapport PDF pour la promotion sélectionnée"
+                           style="-fx-font-size:13;"/>
+                    <Button fx:id="btnRapportPDF" text="📄 Générer rapport PDF"
+                            onAction="#handleGenererRapportPDF"
+                            style="-fx-background-color:#2980B9; -fx-text-fill:white;
+                                   -fx-font-size:13; -fx-padding:10 20;"/>
+                </VBox>
+            </Tab>
+        </TabPane>
+    </center>
+</BorderPane>
