@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="12" style="-fx-padding: 20;" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controller.ModuleDialogCtrl">
+
+    <Label text="Code"/>
+    <TextField fx:id="txtCode" promptText="Code module"/>
+
+    <Label text="Intitule"/>
+    <TextField fx:id="txtIntitule" promptText="Intitule du module"/>
+
+    <Label text="Coefficient"/>
+    <TextField fx:id="txtCoefficient" promptText="Ex: 1.5"/>
+
+    <Label fx:id="lblErreur" style="-fx-text-fill: red;" visible="false"/>
+
+    <HBox spacing="10">
+        <Button fx:id="btnSauvegarder" text="Sauvegarder" onAction="#handleSauvegarder"
+                style="-fx-background-color:#2196F3;-fx-text-fill:white;" prefWidth="120"/>
+        <Button fx:id="btnAnnuler" text="Annuler" prefWidth="100"/>
+    </HBox>
+
+</VBox>

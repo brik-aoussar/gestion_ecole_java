@@ -167,6 +167,36 @@ public class StatistiqueServiceImpl implements StatistiqueService {
         }
     }
 
+    // ── MEILLEUR ÉTUDIANT d'une promotion ────────────────────────────────────
+    @Override
+    public Map<String, Object> getMeilleurEtudiant(Long promotionId) {
+        verifierPromotion(promotionId);
+        try {
+            return statistiqueDAO.getMeilleurEtudiant(promotionId).orElse(null);
+        } catch (SQLException ex) {
+            throw new ServiceException("Erreur récupération meilleur étudiant", ex);
+        }
+    }
+
+    // ── RAPPORT COMPLET par filière ───────────────────────────────────────────
+    @Override
+    public List<Map<String, Object>> getRapportParFiliere(Long filiereId) {
+        if (filiereId == null) throw new ValidationException("filiereId", "Identifiant filière obligatoire");
+        try {
+            List<Map<String, Object>> lignes = statistiqueDAO.getClassementPromotion(filiereId);
+
+            Map<String, Object> resume = new LinkedHashMap<>();
+            resume.put("filiere_id",      filiereId);
+            resume.put("total_etudiants", lignes.size());
+            resume.put("type",            "RESUME_FILIERE");
+            lignes.add(0, resume);
+
+            return lignes;
+        } catch (SQLException ex) {
+            throw new ServiceException("Erreur génération rapport filière", ex);
+        }
+    }
+
     // ── FICHE INDIVIDUELLE ────────────────────────────────────────────────────
     @Override
     public Map<String, Object> getFicheEtudiant(Long etudiantId, Long promotionId) {

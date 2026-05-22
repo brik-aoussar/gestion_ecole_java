@@ -75,7 +75,7 @@ public class NoteServiceImpl implements NoteService {
         verifierSousModuleExiste(sousModuleId);
         verifierEnseignantAssigne(sousModuleId, enseignantId);
         try {
-            List<Note> notes = ExcelImporter.lireNotes(fichier, sousModuleId, enseignantId);
+            List<Note> notes = ExcelImporter.importNotes(fichier, sousModuleId, enseignantId);
             if (notes.isEmpty()) throw new ServiceException("Fichier Excel vide ou invalide");
             notes.forEach(this::validerNote);
             notes.forEach(n -> verifierEtudiantActif(n.getEtudiantId()));

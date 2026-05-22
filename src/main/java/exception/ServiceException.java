@@ -2,9 +2,9 @@ package exception;
 
 /**
  * Exception levée par la couche Service (règle métier violée).
- * Checked — encapsule les DAOException et erreurs métier.
+ * Unchecked — propagée jusqu'au Controller qui la gère.
  */
-public class ServiceException extends Exception {
+public class ServiceException extends RuntimeException {
     public ServiceException(String message) { super(message); }
     public ServiceException(String message, Throwable cause) { super(message, cause); }
 }

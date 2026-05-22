@@ -86,6 +86,7 @@ public class ResponsableCtrl {
 
     // ── ÉTUDIANTS ─────────────────────────────────────────────────────────────
 
+    @FXML
     private void chargerEtudiants() {
         FxUtils.lancerTask(
             () -> etudiantService.recupererTous(),

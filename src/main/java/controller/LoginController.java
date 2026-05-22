@@ -1,5 +1,6 @@
 package controller;
 
+import config.ServiceLocator;
 import exception.AuthException;
 import exception.ValidationException;
 import javafx.concurrent.Task;
@@ -15,48 +16,37 @@ import service.impl.AuthServiceImpl;
 
 import java.io.IOException;
 
-/**
- * Controller — écran de connexion.
- * ZÉRO accès BDD. Tout passe par AuthService.
- */
 public class LoginController {
 
-    // ── Injections FXML ───────────────────────────────────────────────────────
     @FXML private TextField         txtLogin;
     @FXML private PasswordField     txtPassword;
     @FXML private Label             lblErreur;
     @FXML private Button            btnConnexion;
     @FXML private ProgressIndicator progress;
 
-    // ── Dépendances ───────────────────────────────────────────────────────────
     private AuthService authService;
 
     @FXML
     public void initialize() {
         lblErreur.setVisible(false);
         progress.setVisible(false);
-        // Connexion au Enter dans le champ password
         txtPassword.setOnAction(e -> handleLogin());
     }
 
-    /** Injection du service depuis MainApp ou ServiceLocator. */
     public void setAuthService(AuthService authService) {
         this.authService = authService;
     }
 
-    // ── HANDLE LOGIN ──────────────────────────────────────────────────────────
     @FXML
     public void handleLogin() {
         String login    = txtLogin.getText().trim();
         String password = txtPassword.getText();
 
-        // Validation rapide côté UI (avant thread)
         if (login.isEmpty() || password.isEmpty()) {
             afficherErreur("Veuillez remplir tous les champs");
             return;
         }
 
-        // Prépare l'UI pour le chargement
         lblErreur.setVisible(false);
         btnConnexion.setDisable(true);
         progress.setVisible(true);
@@ -73,8 +63,7 @@ public class LoginController {
         task.setOnSucceeded(e -> {
             btnConnexion.setDisable(false);
             progress.setVisible(false);
-            Utilisateur u = task.getValue();
-            routerVersDashboard(u);
+            routerVersDashboard(task.getValue());
         });
 
         task.setOnFailed(e -> {
@@ -84,13 +73,12 @@ public class LoginController {
             if (ex instanceof AuthException || ex instanceof ValidationException)
                 afficherErreur(ex.getMessage());
             else
-                afficherErreur("Erreur de connexion — vérifiez votre réseau");
+                afficherErreur("Erreur de connexion — verifiez votre reseau");
         });
 
         new Thread(task, "login-thread").start();
     }
 
-    // ── ROUTING PAR RÔLE ─────────────────────────────────────────────────────
     private void routerVersDashboard(Utilisateur u) {
         try {
             String fxml = switch (u.getRole()) {
@@ -102,16 +90,37 @@ public class LoginController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
             Parent root = loader.load();
 
-            // Passe l'utilisateur connecté au controller cible
+            ServiceLocator sl = ma.ecole.MainApp.getServiceLocator();
+
             switch (u.getRole()) {
-                case RESPONSABLE_PLANNING -> {} // ResponsableCtrl n'a pas besoin de l'objet user
+                case RESPONSABLE_PLANNING -> {
+                    ResponsableCtrl ctrl = loader.getController();
+                    ctrl.setServices(
+                        sl.getEtudiantService(),
+                        sl.getModuleService(),
+                        sl.getStatistiqueService()
+                    );
+                    ctrl.chargerDonnees();
+                }
                 case RESPONSABLE_FILIERE -> {
                     ResponsableFiliereCtrl ctrl = loader.getController();
+                    ctrl.setServices(
+                        sl.getEtudiantService(),
+                        sl.getNoteService(),
+                        sl.getStatistiqueService()
+                    );
                     ctrl.setUtilisateurConnecte(u);
+                    ctrl.chargerDonnees();
                 }
                 case ENSEIGNANT -> {
                     EnseignantCtrl ctrl = loader.getController();
+                    ctrl.setServices(
+                        sl.getNoteService(),
+                        sl.getModuleService(),
+                        sl.getStatistiqueService()
+                    );
                     ctrl.setUtilisateurConnecte(u);
+                    ctrl.chargerDonnees();
                 }
             }
 
@@ -120,12 +129,12 @@ public class LoginController {
             stage.setTitle("Gestion des Notes — " + u.getNomComplet());
             stage.centerOnScreen();
 
-        } catch (IOException ex) {
+        } catch (Exception ex) {
+            ex.printStackTrace();
             afficherErreur("Impossible d'ouvrir le tableau de bord : " + ex.getMessage());
         }
     }
 
-    // ── UI HELPERS ────────────────────────────────────────────────────────────
     private void afficherErreur(String message) {
         lblErreur.setText(message);
         lblErreur.setVisible(true);

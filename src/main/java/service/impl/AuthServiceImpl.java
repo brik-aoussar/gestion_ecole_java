@@ -41,8 +41,8 @@ public class AuthServiceImpl implements AuthService {
             Utilisateur u = utilisateurDAO.findByLogin(login)
                     .orElseThrow(() -> new AuthException("Identifiants invalides"));
 
-            String hashSaisi = sha256(motDePasse);
-            if (!hashSaisi.equalsIgnoreCase(u.getMotDePasse()))
+            
+            if (!motDePasse.equalsIgnoreCase(u.getMotDePasse()))
                 throw new AuthException("Identifiants invalides");
 
             if (!u.isActif())

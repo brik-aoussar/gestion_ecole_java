@@ -98,7 +98,7 @@ public class EtudiantServiceImpl implements EtudiantService {
             throw new ValidationException("fichier", "Format attendu : .xls ou .xlsx");
         verifierPromotion(promotionId);
         try {
-            List<Etudiant> liste = ExcelImporter.lireEtudiants(fichier);
+            List<Etudiant> liste = ExcelImporter.importEtudiants(fichier);
             if (liste.isEmpty()) throw new ServiceException("Fichier Excel vide ou invalide");
             liste.forEach(e -> valider(e, false)); // validation légère (pas unicité CNE au bulk)
             return etudiantDAO.insertBatch(liste, promotionId);
